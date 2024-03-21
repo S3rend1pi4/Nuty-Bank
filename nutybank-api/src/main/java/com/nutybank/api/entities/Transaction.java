@@ -15,11 +15,14 @@ public class Transaction {
     private double quantity;
     private Date date;
 
-    @ManyToOne
+    @ManyToOne()
+    @JoinColumn(name = "origin_account_id")
     private Account originAccount;
     @ManyToOne
+    @JoinColumn(name = "destination_account_id")
     private Account destinationAccount;
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client clientTransaction;
 
     public Transaction() {

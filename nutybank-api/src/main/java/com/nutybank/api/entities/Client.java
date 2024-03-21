@@ -11,7 +11,7 @@ public class Client extends Person {
 
     private String dni;
     private boolean enabled;
-    @OneToMany()
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
 
     public Client() {

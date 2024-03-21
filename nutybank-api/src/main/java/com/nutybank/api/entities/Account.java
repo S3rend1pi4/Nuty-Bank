@@ -13,6 +13,7 @@ public class Account {
     private double balance;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
 
     public Long getId() {
