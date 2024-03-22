@@ -8,15 +8,15 @@ public class Employee extends Person {
 
     // Cargo que ocupa
     private String position;
-    private double salario;
+    private double salary;
 
     public Employee() {
     }
 
-    public Employee(String name, String lastname, String othername, String email, String password, String dni , String position, double salario) {
+    public Employee(String name, String lastname, String othername, String email, String password, String dni , String position, double salary) {
         super(name, lastname, othername, email, password, dni);
         this.position = position;
-        this.salario = salario;
+        this.salary = salary;
     }
 
     public String getPosition() {
@@ -27,11 +27,11 @@ public class Employee extends Person {
         this.position = position;
     }
 
-    public double getSalario() {
-        return salario;
+    public double getSalary() {
+        return salary;
     }
 
-    public void setSalario(double salario) {
-        this.salario = salario;
+    public void setSalary(double salario) {
+        this.salary = salario;
     }
 }
