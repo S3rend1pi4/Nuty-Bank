@@ -9,6 +9,9 @@ import java.util.List;
 @Table(name = "clients")
 public class Client extends Person {
 
+    private boolean employee;
+    private boolean manager;
+    private boolean admin;
     private boolean enabled;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
@@ -37,4 +40,29 @@ public class Client extends Person {
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
     }
+
+    public boolean isEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(boolean employee) {
+        this.employee = employee;
+    }
+
+    public boolean isManager() {
+        return manager;
+    }
+
+    public void setManager(boolean manager) {
+        this.manager = manager;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
 }
