@@ -13,8 +13,8 @@ public class Employee extends Person {
     public Employee() {
     }
 
-    public Employee(String name, String lastname, String othername, String email, String password, String position, double salario) {
-        super(name, lastname, othername, email, password);
+    public Employee(String name, String lastname, String othername, String email, String password, String dni , String position, double salario) {
+        super(name, lastname, othername, email, password, dni);
         this.position = position;
         this.salario = salario;
     }

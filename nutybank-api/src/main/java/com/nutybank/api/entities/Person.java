@@ -15,6 +15,7 @@ public class Person {
     private String name;
     private String lastname;
     private String othername;
+    private String dni;
     private String email;
     private String password;
     // TODO implementar la lista de roles cuando estén creados
@@ -30,12 +31,13 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, String lastname, String othername, String email, String password) {
+    public Person(String name, String lastname, String othername, String email, String password, String dni) {
         this.name = name;
         this.lastname = lastname;
         this.othername = othername;
         this.email = email;
         this.password = password;
+        this.dni = dni;
     }
 
     public Long getId() {
@@ -92,5 +94,13 @@ public class Person {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

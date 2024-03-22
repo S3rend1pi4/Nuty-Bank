@@ -9,7 +9,6 @@ import java.util.List;
 @Table(name = "clients")
 public class Client extends Person {
 
-    private String dni;
     private boolean enabled;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
@@ -19,17 +18,8 @@ public class Client extends Person {
     }
 
     public Client(String name, String lastname, String othername, String email, String password, String dni) {
-        super(name, lastname, othername, email, password);
+        super(name, lastname, othername, email, password, dni);
         this.accounts = new ArrayList<>();
-        this.dni = dni;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
     }
 
     public boolean isEnabled() {
