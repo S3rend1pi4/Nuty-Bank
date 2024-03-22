@@ -29,58 +29,50 @@ public interface EmployeeService {
      * @return Un {@link Optional} que contiene el empleado encontrado,
      * o un {@link Optional} vacío si no se encuentra ningún empleado con el ID dado.
      */
-    Optional<Client> findById(Long id);
+    Optional<Employee> findById(Long id);
 
     /**
-     * Busca un cliente por su nombre de usuario.
+     * Busca un empleado por su nombre de usuario.
      *
-     * @param userName El nombre de usuario del cliente a buscar.
-     * @return Un {@link Optional} que contiene el cliente encontrado,
-     * o un {@link Optional} vacío si no se encuentra ningún cliente con el nombre dado
+     * @param employeeName El nombre de usuario del empleado a buscar.
+     * @return Un {@link Optional} que contiene el empleado encontrado,
+     * o un {@link Optional} vacío si no se encuentra ningún empleado con el nombre dado
      */
-    Optional<Client> findeByUserName(String userName);
+    Optional<Employee> findeByEmployeeName(String employeeName);
 
     /**
-     * Busca un cliente por su número de identificación (DNI).
+     * Busca un empleado por su número de identificación (DNI).
      *
      * @param dni El número de identificación.
-     * @return Un {@link Optional} que contiene el cliente encontrado,
-     * o un {@link Optional} vacío si no se encuentra ningún cliente con el DNI dado.
+     * @return Un {@link Optional} que contiene el empleado encontrado,
+     * o un {@link Optional} vacío si no se encuentra ningún empleado con el DNI dado.
      */
-    Optional<Client> findByDni(String dni);
+    Optional<Employee> findByDni(String dni);
 
     /**
-     * Busca todas las cuentas asociadas a un cliente.
+     * Guarda un nuevo empleado en la base de datos.
      *
-     * @param userId El ID del cliente para el cual se buscarán las cuentas.
-     * @return Una lista de todas las cuentas asociadas al cliente dado.
+     * @param employee El empleado a guardar.
+     * @return El empleado guardado.
      */
-    List<Account> findAllClientAccounts(Long userId);
+    Employee save(Employee employee);
 
     /**
-     * Guarda un nuevo cliente en la base de datos.
+     * Actualiza los detalles de un empleado existente.
      *
-     * @param client El cliente a guardar.
-     * @return El cliente guardado.
+     * @param id El ID del empleado a actualizar.
+     * @param employee Los nuevos detalles del empleado.
+     * @return Un {@link Optional} que contiene el empleado actualizado,
+     * o un {@link Optional} vacío si no se encuentra ningún empleado con el ID dado.
      */
-    Client save(Client client);
+    Optional<Employee> update(Long id, Employee employee);
 
     /**
-     * Actualiza los detalles de un cliente existente.
+     * Elimina un empleado de la base de datos.
      *
-     * @param id El ID del cliente a actualizar.
-     * @param client Los nuevos detalles del cliente.
-     * @return Un {@link Optional} que contiene el cliente actualizado,
-     * o un {@link Optional} vacío si no se encuentra ningún cliente con el ID dado.
+     * @param id El ID del empleado a eliminar.
+     * @return Un {@link Optional} que contiene el empleado eliminado,
+     * o un {@link Optional} vacío si no se encuentra ningún empleado con el ID dado.
      */
-    Optional<Client> update(Long id, Client client);
-
-    /**
-     * Elimina un cliente de la base de datos.
-     *
-     * @param id El ID del cliente a eliminar.
-     * @return Un {@link Optional} que contiene el cliente eliminado,
-     * o un {@link Optional} vacío si no se encuentra ningún cliente con el ID dado.
-     */
-    Optional<Client> delete(Long id);
+    Optional<Employee> delete(Long id);
 }

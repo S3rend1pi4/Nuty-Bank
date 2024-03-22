@@ -12,45 +12,39 @@ import java.util.Optional;
 
 @Service
 public class EmployeeServicesImpl implements EmployeeService {
-
-
+    
     @Override
     public Page<Employee> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public Optional<Client> findById(Long id) {
+    public Optional<Employee> findById(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Client> findeByUserName(String userName) {
+    public Optional<Employee> findeByEmployeeName(String employeeName) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Client> findByDni(String dni) {
+    public Optional<Employee> findByDni(String dni) {
         return Optional.empty();
     }
 
     @Override
-    public List<Account> findAllClientAccounts(Long userId) {
+    public Employee save(Employee employee) {
         return null;
     }
 
     @Override
-    public Client save(Client client) {
-        return null;
-    }
-
-    @Override
-    public Optional<Client> update(Long id, Client client) {
+    public Optional<Employee> update(Long id, Employee employee) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Client> delete(Long id) {
+    public Optional<Employee> delete(Long id) {
         return Optional.empty();
     }
 }
