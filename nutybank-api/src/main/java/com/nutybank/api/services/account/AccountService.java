@@ -3,6 +3,8 @@ package com.nutybank.api.services.account;
 import com.nutybank.api.entities.Account;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Esta interfaz representa un servicio para gestionar cuentas de usuario.
  */
@@ -15,7 +17,7 @@ public interface AccountService {
      * @return La cuenta recién abierta.
      */
     @Transactional
-    Account openAccount(Long userId);
+    Account openAccount(Long userId, Account account);
 
     /**
      * Encuentra la cuenta asociada con el nombre de usuario dado.
@@ -36,12 +38,12 @@ public interface AccountService {
     /**
      * Realiza un depósito en la cuenta con el ID dado.
      *
-     * @param id El ID de la cuenta en la que se realizará el depósito.
+     * @param id       El ID de la cuenta en la que se realizará el depósito.
      * @param quantity La cantidad a depositar.
      * @return La cuenta después de realizar el depósito.
      */
     @Transactional
-    Account deposit(Long id, double quantity);
+    Optional<Account> deposit(Long id, double quantity);
 
     /**
      * Consulta la cuenta actual.
