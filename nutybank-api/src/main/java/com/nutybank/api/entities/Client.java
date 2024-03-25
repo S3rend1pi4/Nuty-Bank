@@ -3,7 +3,8 @@ package com.nutybank.api.entities;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "clients")
@@ -13,16 +14,17 @@ public class Client extends Person {
     private boolean manager;
     private boolean admin;
     private boolean enabled;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Account> accounts;
+    @OneToMany(mappedBy = "client", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.REFRESH }, orphanRemoval = true)
+    private Set<Account> accounts;
 
     public Client() {
-        this.accounts = new ArrayList<>();
+        this.accounts = new HashSet<>();
     }
 
     public Client(String name, String lastname, String othername, String email, String password, String dni) {
         super(name, lastname, othername, email, password, dni);
-        this.accounts = new ArrayList<>();
+        this.accounts = new HashSet<>();
     }
 
     public boolean isEnabled() {
@@ -33,11 +35,11 @@ public class Client extends Person {
         this.enabled = enabled;
     }
 
-    public List<Account> getAccounts() {
+    public Set<Account> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(List<Account> accounts) {
+    public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
     }
 
