@@ -5,6 +5,7 @@ import com.nutybank.api.entities.Client;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Esta interfaz define un servicio para gestionar clientes.
@@ -43,8 +44,10 @@ public interface ClientService {
      *
      * @param userId El ID del cliente para el cual se buscarán las cuentas.
      * @return Una lista de todas las cuentas asociadas al cliente dado.
-      */
-    List<Account> findAllClientAccounts(Long userId);
+     */
+    Set<Account> findAllClientAccounts(Long userId);
+
+    List<Client> findAll();
 
     /**
      * Guarda un nuevo cliente en la base de datos.
