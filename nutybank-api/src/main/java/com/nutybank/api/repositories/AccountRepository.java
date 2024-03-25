@@ -1,4 +1,4 @@
-package com.nutybank.api.Repositories;
+package com.nutybank.api.repositories;
 
 import com.nutybank.api.entities.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +21,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * o un {@link Optional} vacío si no se encuentra ninguna cuenta.
      */
     Optional<Account> findByClientId(Long clientId);
+
+    Optional<Account> findAccountsByClientName(String userName);
+
+    Optional<Account> deposit(Long id, double quantity);
 
     /**
      * Comprueba si existe una cuenta para el ID de cliente dado.

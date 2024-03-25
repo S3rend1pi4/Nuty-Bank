@@ -1,4 +1,4 @@
-package com.nutybank.api.Repositories;
+package com.nutybank.api.repositories;
 
 import com.nutybank.api.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
