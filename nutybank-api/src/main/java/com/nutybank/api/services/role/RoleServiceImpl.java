@@ -1,8 +1,7 @@
 package com.nutybank.api.services.role;
 
-import com.nutybank.api.Repositories.RoleRepository;
+import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Role;
-import com.nutybank.api.entities.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

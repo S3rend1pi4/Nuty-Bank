@@ -1,6 +1,6 @@
 package com.nutybank.api.services.transaction;
 
-import com.nutybank.api.Repositories.TransactionRepository;
+import com.nutybank.api.repositories.TransactionRepository;
 import com.nutybank.api.entities.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

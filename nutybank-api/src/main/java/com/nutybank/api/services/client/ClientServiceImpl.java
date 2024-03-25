@@ -1,7 +1,7 @@
 package com.nutybank.api.services.client;
 
-import com.nutybank.api.Repositories.ClientRepository;
-import com.nutybank.api.Repositories.RoleRepository;
+import com.nutybank.api.repositories.ClientRepository;
+import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.entities.Role;

@@ -1,7 +1,7 @@
 package com.nutybank.api.services.employee;
 
-import com.nutybank.api.Repositories.EmployeeRepository;
-import com.nutybank.api.Repositories.RoleRepository;
+import com.nutybank.api.repositories.EmployeeRepository;
+import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Employee;
 import com.nutybank.api.entities.Role;
 import org.springframework.beans.factory.annotation.Autowired;
