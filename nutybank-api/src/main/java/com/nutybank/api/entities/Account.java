@@ -1,6 +1,9 @@
 package com.nutybank.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "accounts")
@@ -12,8 +15,9 @@ public class Account {
     private String accountNumber;
     private double balance;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
+    @JsonIgnore
     private Client client;
 
     public Long getId() {
@@ -46,5 +50,17 @@ public class Account {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof Account account)) return false;
+        return Double.compare(getBalance(), account.getBalance()) == 0 && Objects.equals(getId(), account.getId()) && Objects.equals(getAccountNumber(), account.getAccountNumber()) && Objects.equals(getClient(), account.getClient());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getAccountNumber(), getBalance(), getClient());
     }
 }
