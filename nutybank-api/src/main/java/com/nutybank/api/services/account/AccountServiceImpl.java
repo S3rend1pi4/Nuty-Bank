@@ -4,8 +4,10 @@ import com.nutybank.api.repositories.AccountRepository;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.services.client.ClientService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,23 +20,17 @@ public class AccountServiceImpl implements AccountService {
     private ClientService clientService;
 
 
+    @Transactional
     @Override
-    public Account openAccount(Long userId) {
-        Optional<Client> clientOptional = clientService.findById(userId);
+    public Account openAccount(Long userId, Account account) {
+        Client client = clientService.findById(userId).orElseThrow(() -> new EntityNotFoundException("Client not found!"));
 
-        // Crear una nueva cuenta asociada al cliente
-        Account newAccount = new Account();
-        if(accountRepository.existsByClientId(userId)) {
-            // Cliente encontrado
-            Client client = clientOptional.orElseThrow();
+        account.setClient(client);
 
-            newAccount.setClient(client);
-
-            return accountRepository.save(newAccount);
-        }
-        return newAccount;
+       return accountRepository.save(account);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Account findAccountByUserName(String userName) {
         Optional<Account> clientOptional = accountRepository.findAccountsByClientName(userName);
@@ -43,27 +39,31 @@ public class AccountServiceImpl implements AccountService {
         return account.get();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Account findById(Long id) {
         Optional<Account> account = accountRepository.findById(id);
         return account.orElseThrow();
     }
 
+    @Transactional
     @Override
-    public Account deposit(Long id, double quantity) {
-        Optional<Account> account = accountRepository.findById(id);
-        if(account.isPresent()) {
-            double balance = account.get().getBalance();
+    public Optional<Account> deposit(Long id, double quantity) {
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if(accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            double balance = account.getBalance();
             double newBalance = balance + quantity;
 
-            account.get().setBalance(newBalance);
-
-            return account.get();
+            account.setBalance(newBalance);
+            accountRepository.save(account);
+            return Optional.of(account);
 
         }
-        return account.get();
+        return Optional.empty();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Account consultAccount() {
         return null;
