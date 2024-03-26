@@ -1,5 +1,7 @@
 package com.nutybank.api.services.employee;
 
+import com.nutybank.api.dto.EmployeeDto;
+import com.nutybank.api.dto.RoleDto;
 import com.nutybank.api.repositories.EmployeeRepository;
 import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Employee;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -66,19 +69,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> update(Long id, Employee employee) {
+    public Optional<Employee> update(Long id, EmployeeDto employeeDto) {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         if(employeeOptional.isPresent()) {
             Employee employeeDb = employeeOptional.orElseThrow();
-            employeeDb.setName(employee.getName());
-            employeeDb.setLastname(employee.getLastname());
-            employeeDb.setOthername(employee.getOthername());
-            employeeDb.setEmail(employee.getEmail());
-            employeeDb.setPassword(employee.getPassword());
-            employeeDb.setRoles(employee.getRoles());
-            employeeDb.setDni(employee.getDni());
-            employeeDb.setPosition(employee.getPosition());
-            employeeDb.setSalary(employee.getSalary());
+            employeeDb.setName(employeeDto.getName());
+            employeeDb.setLastname(employeeDto.getLastname());
+            employeeDb.setOthername(employeeDto.getOthername());
+            employeeDb.setEmail(employeeDto.getEmail());
+            employeeDb.setPassword(employeeDto.getPassword());
+            employeeDb.setDni(employeeDto.getDni());
+            employeeDb.setPosition(employeeDto.getPosition());
+            employeeDb.setSalary(employeeDto.getSalary());
+
+            Set<RoleDto> rolesDto = employeeDto.getRoles();
+            Set<Role> roles = RoleDto.toRoles(rolesDto);
+            employeeDb.setRoles(roles);
+
 
             return Optional.of(employeeRepository.save(employeeDb));
         }

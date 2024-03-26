@@ -1,5 +1,6 @@
 package com.nutybank.api.services.employee;
 
+import com.nutybank.api.dto.EmployeeDto;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.entities.Employee;
@@ -65,7 +66,7 @@ public interface EmployeeService {
      * @return Un {@link Optional} que contiene el empleado actualizado,
      * o un {@link Optional} vacío si no se encuentra ningún empleado con el ID dado.
      */
-    Optional<Employee> update(Long id, Employee employee);
+    Optional<Employee> update(Long id, EmployeeDto employeeDto);
 
     /**
      * Elimina un empleado de la base de datos.
