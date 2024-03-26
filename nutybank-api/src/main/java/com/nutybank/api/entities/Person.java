@@ -2,15 +2,16 @@ package com.nutybank.api.entities;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "persons")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
+
 public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="person_sequence")
     private Long id;
     private String name;
     private String lastname;
@@ -18,15 +19,15 @@ public class Person {
     private String dni;
     private String email;
     private String password;
-    // TODO implementar la lista de roles cuando estén creados
+
     @ManyToMany
     @JoinTable(
-            name = "clients_roles",
+            name = "person_roles",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "role_id"})}
     )
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public Person() {
     }
@@ -88,11 +89,11 @@ public class Person {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
