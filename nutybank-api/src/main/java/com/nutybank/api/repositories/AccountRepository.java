@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,6 +17,9 @@ import java.util.Optional;
  * que proporciona funcionalidad CRUD para la entidad {@link Account}.
  */
 public interface AccountRepository extends JpaRepository<Account, Long> {
+
+    @Query("SELECT a FROM Account a JOIN FETCH a.client")
+    List<Account> findAll();
 
     /**
      * Recupera un {@link Optional} que contiene la cuenta asociada con el ID de cliente dado.

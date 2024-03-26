@@ -1,5 +1,7 @@
 package com.nutybank.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -15,10 +17,19 @@ public class Account {
     private String accountNumber;
     private double balance;
 
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
-    @JsonIgnore
     private Client client;
+
+    public Account() {
+    }
+
+    public Account(Long id, String accountNumber, double balance) {
+        this.id = id;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
 
     public Long getId() {
         return id;

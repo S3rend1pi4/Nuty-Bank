@@ -1,5 +1,6 @@
 package com.nutybank.api.services.account;
 
+import com.nutybank.api.dto.AccountDto;
 import com.nutybank.api.repositories.AccountRepository;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,14 +22,21 @@ public class AccountServiceImpl implements AccountService {
     private ClientService clientService;
 
 
+    @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
     @Transactional
     @Override
-    public Account openAccount(Long userId, Account account) {
+    public AccountDto openAccount(Long userId, AccountDto accountDto) {
         Client client = clientService.findById(userId).orElseThrow(() -> new EntityNotFoundException("Client not found!"));
+        Account newAccount = new Account();
+        newAccount.setAccountNumber(accountDto.getAccountNumber());
+        newAccount.setBalance(accountDto.getBalance());
+        newAccount.setClient(client);
 
-        account.setClient(client);
-
-       return accountRepository.save(account);
+       return new AccountDto(accountRepository.save(newAccount));
     }
 
     @Transactional(readOnly = true)

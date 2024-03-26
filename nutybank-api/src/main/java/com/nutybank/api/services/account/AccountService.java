@@ -1,14 +1,20 @@
 package com.nutybank.api.services.account;
 
+import com.nutybank.api.dto.AccountDto;
 import com.nutybank.api.entities.Account;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Esta interfaz representa un servicio para gestionar cuentas de usuario.
  */
 public interface AccountService {
+
+
+    List<Account> findAll();
 
     /**
      * Abre una nueva cuenta para el usuario con el ID dado.
@@ -17,7 +23,7 @@ public interface AccountService {
      * @return La cuenta recién abierta.
      */
     @Transactional
-    Account openAccount(Long userId, Account account);
+    AccountDto openAccount(Long userId, AccountDto accountDto);
 
     /**
      * Encuentra la cuenta asociada con el nombre de usuario dado.
