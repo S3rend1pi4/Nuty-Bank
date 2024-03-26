@@ -1,5 +1,9 @@
 package com.nutybank.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "clients")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Client extends Person {
 
     private boolean employee;
@@ -15,7 +20,8 @@ public class Client extends Person {
     private boolean admin;
     private boolean enabled;
     @OneToMany(mappedBy = "client", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-            CascadeType.REFRESH }, orphanRemoval = true)
+            CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
     private Set<Account> accounts;
 
     public Client() {
@@ -66,5 +72,6 @@ public class Client extends Person {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
+
 
 }
