@@ -1,5 +1,6 @@
 package com.nutybank.api.controllers;
 
+import com.nutybank.api.dto.ClientDto;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.services.client.ClientService;
 import jakarta.validation.Valid;
@@ -54,19 +55,19 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Client client, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
         if(result.hasFieldErrors()) {
             return validation(result);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(client));
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<?> updateClient(@Valid @RequestBody ClientDto client, BindingResult result, @PathVariable Long id) {
         if(result.hasFieldErrors()) {
             return validation(result);
         }
-        Optional<Client> clientOptional = clientService.update(id, client);
+        Optional<ClientDto> clientOptional = clientService.update(id, client);
         if(clientOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(clientOptional.orElseThrow());
         }

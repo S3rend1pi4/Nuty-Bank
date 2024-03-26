@@ -1,11 +1,15 @@
 package com.nutybank.api.services.client;
 
+import com.nutybank.api.dto.AccountDto;
+import com.nutybank.api.dto.ClientDto;
+import com.nutybank.api.dto.RoleDto;
 import com.nutybank.api.repositories.AccountRepository;
 import com.nutybank.api.repositories.ClientRepository;
 import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.entities.Role;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,8 @@ public class ClientServiceImpl implements ClientService {
     private RoleRepository roleRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
@@ -66,50 +72,56 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
-    public Client save(Client client) {
+    public ClientDto save(ClientDto clientDto) {
+        Client client = modelMapper.map(clientDto, Client.class);
         Optional<Role> roleOptional = roleRepository.findByName("ROLE_CLIENT");
         List<Role> roles = new ArrayList<>();
 
         roleOptional.ifPresent(roles::add);
 
-        if(client.isEmployee()) {
+        if(clientDto.isEmployee()) {
             Optional<Role> optionalRoleEmployee = roleRepository.findByName("ROLE_EMPLOYEE");
             optionalRoleEmployee.ifPresent(roles::add);
         }
 
-        if(client.isManager()) {
+        if(clientDto.isManager()) {
             Optional<Role> optionalRoleManager = roleRepository.findByName("ROLE_MANAGER");
             optionalRoleManager.ifPresent(roles::add);
         }
 
-        if(client.isAdmin()) {
+        if(clientDto.isAdmin()) {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
             optionalRoleAdmin.ifPresent(roles::add);
         }
 
-        client.setRoles(roles);
-        client.setPassword(client.getPassword());
-        return clientRepository.save(client);
+        client.setRoles((Set<Role>) roles);
+        client.setPassword(clientDto.getPassword());
+        return ClientDto.toDto(clientRepository.save(client));
     }
 
     @Transactional
     @Override
-    public Optional<Client> update(Long id, Client client) {
+    public Optional<ClientDto> update(Long id, ClientDto clientDto) {
         Optional<Client> clientOptional = clientRepository.findById(id);
         if(clientOptional.isPresent()) {
             Client clientDb = clientOptional.get();
             // Actualizar campos del cliente
-            clientDb.setName(client.getName());
-            clientDb.setLastname(client.getLastname());
-            clientDb.setOthername(client.getOthername());
-            clientDb.setEmail(client.getEmail());
-            clientDb.setPassword(client.getPassword());
-            clientDb.setRoles(client.getRoles());
-            clientDb.setDni(client.getDni());
+            clientDb.setName(clientDto.getName());
+            clientDb.setLastname(clientDto.getLastname());
+            clientDb.setOthername(clientDto.getOthername());
+            clientDb.setEmail(clientDto.getEmail());
+            clientDb.setPassword(clientDto.getPassword());
+            clientDb.setDni(clientDto.getDni());
+            clientDb.setEmployee(clientDto.isEmployee());
+            clientDb.setManager(clientDto.isManager());
+            clientDb.setAdmin(clientDto.isAdmin());
+            Set<RoleDto> rolesDto = clientDto.getRoles();
+            Set<Role> roles = RoleDto.toRoles(rolesDto);
 
             // Actualizar cuentas asociadas
             Set<Account> updatedAccounts = new HashSet<>();
-            for (Account account : client.getAccounts()) {
+            for (AccountDto accountDto : clientDto.getAccounts()) {
+                Account account = modelMapper.map(accountDto, Account.class);
                 account.setClient(clientDb);
                 updatedAccounts.add(accountRepository.save(account));
             }
@@ -117,12 +129,13 @@ public class ClientServiceImpl implements ClientService {
             clientDb.getAccounts().removeIf(existingAccount -> !updatedAccounts.contains(existingAccount));
 
             // Actualizar la lista de cuentas del cliente
-            clientDb.setAccounts(updatedAccounts);
 
+            clientDb.setAccounts(updatedAccounts);
+            clientDb.setRoles(roles);
             // Guardar el cliente actualizado
-            return Optional.of(clientRepository.save(clientDb));
+            return Optional.of(ClientDto.toDto(clientRepository.save(clientDb)));
         }
-        return clientOptional;
+        return Optional.empty();
     }
 
     @Transactional

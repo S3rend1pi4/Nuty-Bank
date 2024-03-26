@@ -1,5 +1,6 @@
 package com.nutybank.api.services.client;
 
+import com.nutybank.api.dto.ClientDto;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 
@@ -52,20 +53,20 @@ public interface ClientService {
     /**
      * Guarda un nuevo cliente en la base de datos.
      *
-     * @param client El cliente a guardar.
+     * @param clientDto El cliente a guardar.
      * @return El cliente guardado.
      */
-    Client save(Client client);
+    ClientDto save(ClientDto clientDto);
 
     /**
      * Actualiza los detalles de un cliente existente.
      *
      * @param id El ID del cliente a actualizar.
-     * @param client Los nuevos detalles del cliente.
+     * @param clientDto Los nuevos detalles del cliente.
      * @return Un {@link Optional} que contiene el cliente actualizado,
      * o un {@link Optional} vacío si no se encuentra ningún cliente con el ID dado.
      */
-    Optional<Client> update(Long id, Client client);
+    Optional<ClientDto> update(Long id, ClientDto clientDto);
 
     /**
      * Elimina un cliente de la base de datos.
