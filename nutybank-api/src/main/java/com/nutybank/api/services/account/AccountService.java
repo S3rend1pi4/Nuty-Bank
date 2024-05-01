@@ -2,7 +2,7 @@ package com.nutybank.api.services.account;
 
 import com.nutybank.api.dto.AccountDto;
 import com.nutybank.api.entities.Account;
-import org.springframework.data.jpa.repository.Query;
+import com.nutybank.api.entities.Client;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public interface AccountService {
      * @param userName El nombre de usuario para el cual se buscará la cuenta.
      * @return La cuenta asociada con el nombre de usuario dado, o null si no se encuentra ninguna cuenta.
      */
-    Account findAccountByUserName(String userName);
+    List<Account> findAccountByUserName(String userName);
 
     /**
      * Encuentra la cuenta asociada con el ID dado.

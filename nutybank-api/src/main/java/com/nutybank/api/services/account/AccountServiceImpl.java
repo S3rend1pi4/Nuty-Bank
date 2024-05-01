@@ -41,11 +41,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional(readOnly = true)
     @Override
-    public Account findAccountByUserName(String userName) {
-        Optional<Account> clientOptional = accountRepository.findAccountsByClientName(userName);
-        Optional<Client> client = clientService.findeByUserName(userName);
-        Optional<Account> account = Optional.of(accountRepository.findByClientId(client.get().getId()).orElseThrow());
-        return account.get();
+    public List<Account> findAccountByUserName(String userName) {
+        return accountRepository.findAccountsByClientName(userName).stream().toList();
     }
 
     @Transactional(readOnly = true)

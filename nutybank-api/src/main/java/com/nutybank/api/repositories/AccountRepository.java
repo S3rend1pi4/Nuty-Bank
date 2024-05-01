@@ -30,7 +30,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      */
     Optional<Account> findByClientId(Long clientId);
 
-    Optional<Account> findAccountsByClientName(String userName);
+    List<Account> findAccountsByClientName(String userName);
 
     /**
      * Comprueba si existe una cuenta para el ID de cliente dado.
