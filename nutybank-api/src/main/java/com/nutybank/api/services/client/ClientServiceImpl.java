@@ -43,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Client> findeByUserName(String userName) {
+    public Optional<Client> findByUserName(String userName) {
         return clientRepository.findByName(userName);
     }
 
@@ -72,31 +72,39 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
-    public ClientDto save(ClientDto clientDto) {
-        Client client = modelMapper.map(clientDto, Client.class);
+    public Client save(Client clientPost) {
+        Client client = new Client();
+        client.setName(clientPost.getName());
+        client.setLastname(clientPost.getLastname());
+        client.setOthername(clientPost.getOthername());
+        client.setEmail(clientPost.getEmail());
+        client.setPassword(clientPost.getPassword());
+        client.setDni(clientPost.getDni());
+        client.setEmployee(clientPost.isEmployee());
+        client.setManager(clientPost.isManager());
+        client.setAdmin(clientPost.isAdmin());
+        Set<Role> roles = new HashSet<>();
         Optional<Role> roleOptional = roleRepository.findByName("ROLE_CLIENT");
-        List<Role> roles = new ArrayList<>();
-
         roleOptional.ifPresent(roles::add);
 
-        if(clientDto.isEmployee()) {
+        if(client.isEmployee()) {
             Optional<Role> optionalRoleEmployee = roleRepository.findByName("ROLE_EMPLOYEE");
             optionalRoleEmployee.ifPresent(roles::add);
         }
 
-        if(clientDto.isManager()) {
+        if(client.isManager()) {
             Optional<Role> optionalRoleManager = roleRepository.findByName("ROLE_MANAGER");
             optionalRoleManager.ifPresent(roles::add);
         }
 
-        if(clientDto.isAdmin()) {
+        if(client.isAdmin()) {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
             optionalRoleAdmin.ifPresent(roles::add);
         }
 
         client.setRoles((Set<Role>) roles);
-        client.setPassword(clientDto.getPassword());
-        return ClientDto.toDto(clientRepository.save(client));
+        client.setPassword(client.getPassword());
+        return clientRepository.save(client);
     }
 
     @Transactional

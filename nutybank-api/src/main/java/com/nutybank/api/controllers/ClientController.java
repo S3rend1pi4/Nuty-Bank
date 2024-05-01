@@ -47,7 +47,7 @@ public class ClientController {
 
     @GetMapping("client/name/{name}")
     public ResponseEntity<?> findByName(@PathVariable String name) {
-        Optional<Client> clientOptional = clientService.findeByUserName(name);
+        Optional<Client> clientOptional = clientService.findByUserName(name);
         if(clientOptional.isPresent()) {
             return ResponseEntity.ok(clientOptional.orElseThrow());
         }
@@ -55,11 +55,11 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody Client client, BindingResult result) {
         if(result.hasFieldErrors()) {
             return validation(result);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(client));
     }
 
     @PutMapping("/{id}")

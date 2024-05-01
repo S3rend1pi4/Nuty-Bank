@@ -29,7 +29,7 @@ public interface ClientService {
      * @return Un {@link Optional} que contiene el cliente encontrado,
      * o un {@link Optional} vacío si no se encuentra ningún cliente con el nombre dado
      */
-    Optional<Client> findeByUserName(String userName);
+    Optional<Client> findByUserName(String userName);
 
     /**
      * Busca un cliente por su número de identificación (DNI).
@@ -56,7 +56,7 @@ public interface ClientService {
      * @param clientDto El cliente a guardar.
      * @return El cliente guardado.
      */
-    ClientDto save(ClientDto clientDto);
+    Client save(Client clientDto);
 
     /**
      * Actualiza los detalles de un cliente existente.
