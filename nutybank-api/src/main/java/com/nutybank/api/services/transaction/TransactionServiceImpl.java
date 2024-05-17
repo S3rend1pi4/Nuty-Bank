@@ -1,5 +1,6 @@
 package com.nutybank.api.services.transaction;
 
+import com.nutybank.api.entities.Account;
 import com.nutybank.api.repositories.TransactionRepository;
 import com.nutybank.api.entities.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,19 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction save(Transaction transaction) {
+        Account originAccount = transaction.getOriginAccount();
+        Account destinationAccount = transaction.getDestinationAccount();
+        double quantity = transaction.getQuantity();
+
+        if (originAccount.getBalance() < quantity) {
+            throw new IllegalArgumentException("Saldo de la cuenta de origen insuficiente");
+        }
+        originAccount.setBalance(originAccount.getBalance() - quantity);
+        destinationAccount.setBalance(destinationAccount.getBalance() + quantity);
+        if(transaction.getDate() == null) {
+            transaction.setDate(new Date());
+        }
+
         return transactionRepository.save(transaction);
     }
 

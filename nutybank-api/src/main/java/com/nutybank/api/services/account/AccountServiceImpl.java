@@ -21,7 +21,6 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private ClientService clientService;
 
-
     @Override
     public List<Account> findAll() {
         return accountRepository.findAll();

@@ -1,5 +1,6 @@
 package com.nutybank.api.services.transaction;
 
+import com.nutybank.api.dto.TransactionDto;
 import com.nutybank.api.entities.Transaction;
 
 import java.util.Date;

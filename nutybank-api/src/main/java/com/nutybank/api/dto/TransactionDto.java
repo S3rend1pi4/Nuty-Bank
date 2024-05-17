@@ -9,51 +9,11 @@ import java.util.stream.Collectors;
 
 public class TransactionDto {
 
-    private Long id;
     private String concept;
     private double quantity;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
     private Long originAccountId;
     private Long destinationAccountId;
-
-    public TransactionDto() {
-
-    }
-
-    public TransactionDto(Transaction transaction) {
-        this.id = transaction.getId();
-        this.concept = transaction.getConcept();
-        this.quantity = transaction.getQuantity();
-        this.date = transaction.getDate();
-        this.originAccountId = transaction.getOriginAccount().getId();
-        this.destinationAccountId = transaction.getDestinationAccount().getId();
-    }
-
-    public static TransactionDto toDto(Transaction transaction) {
-        TransactionDto transactionDto = new TransactionDto();
-        transactionDto.setId(transaction.getId());
-        transactionDto.setConcept(transaction.getConcept());
-        transactionDto.setQuantity(transaction.getQuantity());
-        transactionDto.setDate(transaction.getDate());
-        transactionDto.setOriginAccountId(transaction.getOriginAccount().getId());
-        transactionDto.setDestinationAccountId(transaction.getDestinationAccount().getId());
-        return transactionDto;
-    }
-
-    public static List<TransactionDto> toDtos(List<Transaction> transactions) {
-        return transactions.stream()
-                .map(TransactionDto::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Long clientId;
 
     public String getConcept() {
         return concept;
@@ -71,14 +31,6 @@ public class TransactionDto {
         this.quantity = quantity;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public Long getOriginAccountId() {
         return originAccountId;
     }
@@ -93,5 +45,13 @@ public class TransactionDto {
 
     public void setDestinationAccountId(Long destinationAccountId) {
         this.destinationAccountId = destinationAccountId;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }

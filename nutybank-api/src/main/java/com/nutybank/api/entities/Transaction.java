@@ -13,6 +13,7 @@ public class Transaction {
     private Long id;
     private String concept;
     private double quantity;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @ManyToOne()
@@ -28,10 +29,10 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String concept, double quantity, Date date, Account originAccount, Account destinationAccount, Client clientTransaction) {
+    public Transaction(String concept, double quantity, Account originAccount, Account destinationAccount, Client clientTransaction) {
         this.concept = concept;
         this.quantity = quantity;
-        this.date = date;
+        this.date = new Date();
         this.originAccount = originAccount;
         this.destinationAccount = destinationAccount;
         this.clientTransaction = clientTransaction;
