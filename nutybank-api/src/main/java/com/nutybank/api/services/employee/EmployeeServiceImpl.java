@@ -11,10 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -47,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee save(Employee employee) {
         Optional<Role> roleOptional = roleRepository.findByName("ROLE_EMPLOYEE");
-        List<Role> roles = new ArrayList<>();
+        Set<Role> roles = new HashSet<>();
 
         roleOptional.ifPresent(roles::add);
 
@@ -65,6 +62,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
             optionalRoleAdmin.ifPresent(roles::add);
         }
+
+        employee.setRoles(roles);
+
         return employeeRepository.save(employee);
     }
 
