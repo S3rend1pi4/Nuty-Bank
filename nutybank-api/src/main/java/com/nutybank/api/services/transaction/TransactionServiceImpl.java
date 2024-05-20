@@ -1,8 +1,10 @@
 package com.nutybank.api.services.transaction;
 
 import com.nutybank.api.entities.Account;
+import com.nutybank.api.entities.Client;
 import com.nutybank.api.repositories.TransactionRepository;
 import com.nutybank.api.entities.Transaction;
+import com.nutybank.api.services.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +18,40 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private AccountService accountService;
 
     @Override
-    public Optional<Transaction> findByClientName(String clientName) {
-
-        return transactionRepository.findByClientTransactionName(clientName);
+    public List<Transaction> findAll() {
+        return transactionRepository.findAll();
     }
 
     @Override
-    public Optional<Transaction> findByClientDni(String dni) {
-        return transactionRepository.findByClientTransactionDni(dni);
+    public List<Transaction> findByClientName(String clientName) {
+        List<Transaction> allTransactions = transactionRepository.findAll();
+        List<Transaction> transactionByClientName = new ArrayList<>();
+
+        for (Transaction transaction : allTransactions) {
+            if (transaction.getClientTransaction().getName().equals(clientName)) {
+                transactionByClientName.add(transaction);
+            }
+        }
+
+        return transactionByClientName;
+    }
+
+    @Override
+    public List<Transaction> findByClientDni(String dni) {
+        List<Transaction> allTransactions = transactionRepository.findAll();
+        List<Transaction> transactionByClientDni = new ArrayList<>();
+
+        for (Transaction transaction : allTransactions) {
+            if (transaction.getClientTransaction().getDni().equals(dni)) {
+                transactionByClientDni.add(transaction);
+            }
+        }
+
+        return transactionByClientDni;
     }
 
     @Override
@@ -46,6 +72,8 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction save(Transaction transaction) {
         Account originAccount = transaction.getOriginAccount();
         Account destinationAccount = transaction.getDestinationAccount();
+        Client clientOptTransaction = originAccount.getClient();
+        transaction.setClientTransaction(clientOptTransaction);
         double quantity = transaction.getQuantity();
 
         if (originAccount.getBalance() < quantity) {
@@ -63,6 +91,15 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Optional<Transaction> delete(Long id) {
         Optional<Transaction> transactionOptional = transactionRepository.findById(id);
+        Account originAccount = transactionOptional.get().getOriginAccount();
+        Account destinationAccount = transactionOptional.get().getOriginAccount();
+        double quantity = transactionOptional.get().getQuantity();
+        if(originAccount != null && destinationAccount != null) {
+            accountService.deposit(originAccount.getId(), originAccount.getBalance() + quantity);
+            accountService.deposit(destinationAccount.getId(), destinationAccount.getBalance() - quantity);
+            //destinationAccount.setBalance(destinationAccount.getBalance() - quantity);
+        }
+
         transactionOptional.ifPresent(transaction -> transactionRepository.delete(transaction));
         return transactionOptional;
     }

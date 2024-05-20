@@ -9,13 +9,16 @@ import com.nutybank.api.services.client.ClientService;
 import com.nutybank.api.services.transaction.TransactionServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/transactions")
+@RequestMapping("/api/transactions")
 public class TransactionController {
 
     @Autowired
@@ -24,6 +27,29 @@ public class TransactionController {
     AccountService accountService;
     @Autowired
     ClientService clientService;
+
+    @GetMapping
+    public List<Transaction> getTransactions() {
+        return  transactionService.findAll();
+    }
+
+    @GetMapping("/transaction/username/{userName}")
+    public ResponseEntity<?> getTransactionsByClientName(@PathVariable String userName) {
+        List<Transaction> transactions = transactionService.findByClientName(userName);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/transaction/dni/{dni}")
+    public ResponseEntity<?> getTransactionsByClientDni(@PathVariable String dni) {
+        List<Transaction> transactions = transactionService.findByClientDni(dni);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/transaction/date/{date}")
+    public ResponseEntity<?> getTransactionByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        List<Transaction> transactions = transactionService.findByDate(date);
+        return ResponseEntity.ok(transactions);
+    }
 
     @PostMapping
     public ResponseEntity<Transaction> createTransaction(@Valid @RequestBody TransactionDto transactionDto) {
@@ -47,5 +73,11 @@ public class TransactionController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @DeleteMapping("{transactionId}")
+    public ResponseEntity<?> deleteTransaction(@Valid @PathVariable Long transactionId) {
+        transactionService.delete(transactionId);
+        return ResponseEntity.ok().build();
     }
 }

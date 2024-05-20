@@ -13,13 +13,20 @@ import java.util.Optional;
 public interface TransactionService {
 
     /**
+     * Busca todas las transacciones en la base de datos.
+     *
+     * @return Una lista de todas las transacciones encontradas en la base de datos.
+     */
+    List<Transaction> findAll();
+
+    /**
      * Busca una transacción por el nombre del cliente asociado.
      *
      * @param clientName El nombre del cliente asociado con la transacción a buscar.
      * @return Un {@link Optional} que contiene la transacción encontrada,
      * o un {@link Optional} vacío si no se encuentra ninguna transacción para el nombre de cliente dado.
      */
-    Optional<Transaction> findByClientName(String clientName);
+    List<Transaction> findByClientName(String clientName);
 
     /**
      * Busca una transacción por el DNI del cliente asociado.
@@ -28,7 +35,7 @@ public interface TransactionService {
      * @return Un {@link Optional} que contiene la transacción encontrada,
      * o un {@link Optional} vacío si no se encuentra ninguna transacción para el nombre de cliente dado.
      */
-    Optional<Transaction> findByClientDni(String dni);
+    List<Transaction> findByClientDni(String dni);
 
     /**
      * Busca transacciones realizadas en una fecha específica.

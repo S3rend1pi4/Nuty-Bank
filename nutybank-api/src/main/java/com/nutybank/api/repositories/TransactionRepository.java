@@ -3,6 +3,7 @@ package com.nutybank.api.repositories;
 import com.nutybank.api.entities.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,7 +20,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      * @return Un {@link Optional} que contiene la {@link Transaction} asociada con el nombre del cliente dado,
      * o un {@link Optional} vacío si no se encuentra ninguna transacción.
      */
-    Optional<Transaction> findByClientTransactionName(String clientName);
+    List<Transaction> findByClientTransactionName(String clientName);
 
     /**
      * Recupera un {@link Optional} que contiene la transacción asociada con el DNI del cliente dado.

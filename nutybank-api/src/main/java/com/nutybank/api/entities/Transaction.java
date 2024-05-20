@@ -13,7 +13,7 @@ public class Transaction {
     private Long id;
     private String concept;
     private double quantity;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date date;
 
     @ManyToOne()
