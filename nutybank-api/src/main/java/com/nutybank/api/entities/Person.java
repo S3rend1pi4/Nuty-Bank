@@ -7,7 +7,11 @@ import java.util.Set;
 @Entity
 @Table(name = "persons")
 @Inheritance(strategy = InheritanceType.JOINED)
-
+@SequenceGenerator(
+        name = "person_sequence",
+        sequenceName = "person_sequence",
+        allocationSize = 1
+)
 public class Person {
 
     @Id
