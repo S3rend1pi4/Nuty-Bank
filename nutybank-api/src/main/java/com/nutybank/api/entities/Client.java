@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,16 +13,18 @@ import java.util.Set;
 
 @Entity
 @Table(name = "clients")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Client extends Person {
 
+
+    @NotNull
     private boolean employee;
+    @NotNull
     private boolean manager;
+    @NotNull
     private boolean admin;
+    @NotNull
     private boolean enabled;
-    @OneToMany(mappedBy = "client", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-            CascadeType.REFRESH},
-            fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private Set<Account> accounts;
 
     public Client() {

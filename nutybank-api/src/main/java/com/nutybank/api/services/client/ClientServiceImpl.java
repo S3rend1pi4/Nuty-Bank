@@ -9,9 +9,12 @@ import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Account;
 import com.nutybank.api.entities.Client;
 import com.nutybank.api.entities.Role;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +35,11 @@ public class ClientServiceImpl implements ClientService {
     private AccountRepository accountRepository;
     @Autowired
     private ModelMapper modelMapper;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private Validator validator;
 
     @Transactional(readOnly = true)
     @Override
@@ -73,37 +79,36 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     @Override
     public Client save(Client clientPost) {
+        validatePassword(clientPost.getPassword());
         Client client = new Client();
         client.setName(clientPost.getName());
         client.setLastname(clientPost.getLastname());
         client.setOthername(clientPost.getOthername());
         client.setEmail(clientPost.getEmail());
-        client.setPassword(clientPost.getPassword());
         client.setDni(clientPost.getDni());
         client.setEmployee(clientPost.isEmployee());
         client.setManager(clientPost.isManager());
         client.setAdmin(clientPost.isAdmin());
+
+        // Inicializar conjunto de roles
         Set<Role> roles = new HashSet<>();
-        Optional<Role> roleOptional = roleRepository.findByName("ROLE_CLIENT");
-        roleOptional.ifPresent(roles::add);
 
-        if(client.isEmployee()) {
-            Optional<Role> optionalRoleEmployee = roleRepository.findByName("ROLE_EMPLOYEE");
-            optionalRoleEmployee.ifPresent(roles::add);
+        // Asignar roles basados en los valores booleanos
+        roleRepository.findByName("ROLE_CLIENT").ifPresent(roles::add); // Agregar rol CLIENT por defecto
+
+        if (client.isEmployee()) {
+            roleRepository.findByName("ROLE_EMPLOYEE").ifPresent(roles::add);
+        }
+        if (client.isManager()) {
+            roleRepository.findByName("ROLE_MANAGER").ifPresent(roles::add);
+        }
+        if (client.isAdmin()) {
+            roleRepository.findByName("ROLE_ADMIN").ifPresent(roles::add);
         }
 
-        if(client.isManager()) {
-            Optional<Role> optionalRoleManager = roleRepository.findByName("ROLE_MANAGER");
-            optionalRoleManager.ifPresent(roles::add);
-        }
-
-        if(client.isAdmin()) {
-            Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
-            optionalRoleAdmin.ifPresent(roles::add);
-        }
-
-        client.setRoles((Set<Role>) roles);
-        client.setPassword(client.getPassword());
+        // Asignar roles al cliente
+        client.setRoles(roles);
+        client.setPassword(passwordEncoder.encode(clientPost.getPassword()));
         return clientRepository.save(client);
     }
 
@@ -118,7 +123,7 @@ public class ClientServiceImpl implements ClientService {
             clientDb.setLastname(clientDto.getLastname());
             clientDb.setOthername(clientDto.getOthername());
             clientDb.setEmail(clientDto.getEmail());
-            clientDb.setPassword(clientDto.getPassword());
+            clientDb.setPassword(passwordEncoder.encode(clientDto.getPassword()));
             clientDb.setDni(clientDto.getDni());
             clientDb.setEmployee(clientDto.isEmployee());
             clientDb.setManager(clientDto.isManager());
@@ -154,5 +159,17 @@ public class ClientServiceImpl implements ClientService {
             clientRepository.delete(clientDb);
         });
         return clientOptionalDb;
+    }
+
+    @Override
+    public boolean existsByDni(String dni) {
+        return clientRepository.existsByDni(dni);
+    }
+
+    private void validatePassword(String password) {
+        Set<ConstraintViolation<Client>> violations = validator.validateValue(Client.class, "password", password);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 }

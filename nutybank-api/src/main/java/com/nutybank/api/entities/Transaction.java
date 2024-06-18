@@ -3,6 +3,7 @@ package com.nutybank.api.entities;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "transactions")
@@ -92,5 +93,17 @@ public class Transaction {
 
     public void setClientTransaction(Client clientTransaction) {
         this.clientTransaction = clientTransaction;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof Transaction that)) return false;
+        return Double.compare(getQuantity(), that.getQuantity()) == 0 && Objects.equals(getId(), that.getId()) && Objects.equals(getConcept(), that.getConcept()) && Objects.equals(getDate(), that.getDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getConcept(), getQuantity(), getDate());
     }
 }

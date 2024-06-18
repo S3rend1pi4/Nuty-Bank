@@ -3,6 +3,7 @@ package com.nutybank.api.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -18,6 +19,7 @@ public class Account {
     private double balance;
 
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"accounts"})
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
     private Client client;

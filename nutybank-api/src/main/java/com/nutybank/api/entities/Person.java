@@ -1,7 +1,14 @@
 package com.nutybank.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nutybank.api.validation.ExistsByDni;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -17,14 +24,31 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="person_sequence")
     private Long id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String lastname;
+
+    @NotBlank
     private String othername;
+
+    @ExistsByDni
+    @NotBlank
+    @Column(unique = true)
     private String dni;
+
+    @NotBlank
     private String email;
+
+    @NotBlank
+    //@Size(min = 8, max = 30)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @ManyToMany
+    @JsonIgnoreProperties({"users"})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "person_roles",
             joinColumns = @JoinColumn(name = "person_id"),
@@ -107,5 +131,17 @@ public class Person {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof Person person)) return false;
+        return Objects.equals(getId(), person.getId()) && Objects.equals(getName(), person.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
     }
 }

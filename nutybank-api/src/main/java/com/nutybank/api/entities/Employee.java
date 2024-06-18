@@ -1,21 +1,27 @@
 package com.nutybank.api.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "employees")
 public class Employee extends Person {
 
     // Cargo que ocupa
+    @NotBlank
     private String position;
+    @NotBlank
     private double salary;
-
+    @NotNull
     private boolean admin;
+    @NotNull
     private boolean manager;
+    @NotNull
     private boolean client;
+
     private boolean enabled;
-
-
 
     public Employee() {
     }

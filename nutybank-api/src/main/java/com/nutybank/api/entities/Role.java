@@ -1,5 +1,7 @@
 package com.nutybank.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @JsonIgnoreProperties({"roles"})
     @ManyToMany(mappedBy = "roles")
     private List<Person> users;
 
