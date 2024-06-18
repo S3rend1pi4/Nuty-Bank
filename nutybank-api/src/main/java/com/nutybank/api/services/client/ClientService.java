@@ -77,4 +77,5 @@ public interface ClientService {
      */
     Optional<Client> delete(Long id);
 
+    boolean existsByDni(String dni);
 }

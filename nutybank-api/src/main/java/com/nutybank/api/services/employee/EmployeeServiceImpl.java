@@ -100,4 +100,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         });
         return employeeOptional;
     }
+
+    @Override
+    public boolean existsByDni(String dni) {
+        return employeeRepository.existsByDni(dni);
+    }
 }

@@ -76,4 +76,5 @@ public interface EmployeeService {
      * o un {@link Optional} vacío si no se encuentra ningún empleado con el ID dado.
      */
     Optional<Employee> delete(Long id);
+    boolean existsByDni(String dni);
 }

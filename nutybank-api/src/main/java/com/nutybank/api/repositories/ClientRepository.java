@@ -29,4 +29,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
      * o un {@link Optional} vacío si no se encuentra ningún cliente.
      */
     Optional<Client> findByName(String name);
+
+    boolean existsByDni(String dni);
 }

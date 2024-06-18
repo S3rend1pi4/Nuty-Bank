@@ -29,5 +29,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * o un {@link Optional} vacío si no se encuentra ningún cliente asociado.
      */
     Optional<Employee> findByName(String name);
-
+    boolean existsByDni(String dni);
 }
