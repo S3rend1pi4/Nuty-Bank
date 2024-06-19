@@ -1,6 +1,7 @@
 package com.nutybank.api.repositories;
 
 import com.nutybank.api.entities.Client;
+import com.nutybank.api.entities.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -31,4 +32,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     Optional<Client> findByName(String name);
 
     boolean existsByDni(String dni);
+
+    //Optional<Client> findByUserName(String userName);
 }
