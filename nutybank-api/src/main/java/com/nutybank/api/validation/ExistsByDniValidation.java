@@ -16,6 +16,11 @@ public class ExistsByDniValidation implements ConstraintValidator<ExistsByDni, S
     private EmployeeService employeeService;
     @Override
     public boolean isValid(String dni, ConstraintValidatorContext context) {
+        if (clientService == null) {
+            return true;
+        } else if(employeeService == null) {
+            return true;
+        }
 
         return !(clientService.existsByDni(dni) || employeeService.existsByDni(dni));
     }
