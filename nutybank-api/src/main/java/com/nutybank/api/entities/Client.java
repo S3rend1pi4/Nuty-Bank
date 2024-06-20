@@ -24,7 +24,7 @@ public class Client extends Person {
     private boolean admin;
     @NotNull
     private boolean enabled;
-    @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Account> accounts;
 
     public Client() {

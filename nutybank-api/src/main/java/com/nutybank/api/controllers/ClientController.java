@@ -85,6 +85,16 @@ public class ClientController {
         return ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@Valid @PathVariable Long id) {
+        Optional<Client> clientOptional = clientService.delete(id);
+        if (clientOptional.isPresent()) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
         result.getFieldErrors().forEach(err -> {

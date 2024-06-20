@@ -20,7 +20,7 @@ public class Account {
 
     @JsonIdentityReference(alwaysAsId = true)
     @JsonIgnoreProperties({"accounts"})
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 
