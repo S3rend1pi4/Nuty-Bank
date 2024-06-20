@@ -28,4 +28,10 @@ public class EmployeeController {
         employeeService.save(employee);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        employeeService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

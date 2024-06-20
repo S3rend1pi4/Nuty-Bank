@@ -71,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Set<Role> roles = new HashSet<>();
 
         // Asignar roles basados en los valores booleanos
-        roleRepository.findByName("ROLE_EMPLOYEE").ifPresent(roles::add); // Agregar rol CLIENT por defecto
+        roleRepository.findByName("ROLE_EMPLOYEE").ifPresent(roles::add); // Agregar rol EMPLOYEE por defecto
 
         if (employee.isClient()) {
             roleRepository.findByName("ROLE_CLIENT").ifPresent(roles::add);
@@ -83,7 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             roleRepository.findByName("ROLE_ADMIN").ifPresent(roles::add);
         }
 
-        // Asignar roles al cliente
+        // Asignar roles al empleado
         employee.setRoles(roles);
         employee.setPassword(passwordEncoder.encode(employeePost.getPassword()));
         return employeeRepository.save(employee);
