@@ -41,6 +41,20 @@ ADD CONSTRAINT `FK_roles`
   ON UPDATE NO ACTION;
 ```
 
+Next step insert the role names into table roles
+```SQL
+INSERT INTO `db_nutybank_test`.`roles` (`id`, `name`) VALUES ('1', 'ROLE_EMPLOYEE');
+INSERT INTO `db_nutybank_test`.`roles` (`id`, `name`) VALUES ('2', 'ROLE_CLIENT');
+INSERT INTO `db_nutybank_test`.`roles` (`id`, `name`) VALUES ('3', 'ROLE_MANAGER');
+INSERT INTO `db_nutybank_test`.`roles` (`id`, `name`) VALUES ('4', 'ROLE_ADMIN');
+```
+
+Create a new User admin
+```SQL
+INSERT INTO `db_nutybank_test`.`persons` (`id`, `dni`, `email`, `lastname`, `name`, `othername`, `password`) VALUES ('1', '3245643E', 'admin@admin.es', 'Administrator', 'Admin', 'Administrator', 'Admin1234');
+INSERT INTO `db_nutybank_test`.`employees` (`admin`, `client`, `enabled`, `manager`, `position`, `salary`, `id`) VALUES (true, false, true, false,'NutyBank Administrator', 1234.56, 1);
+```
+
 ### IMPORTANT NOTE
 
 remember to change all occurrences with the name ***db_nutybank_test*** to the name of your database
