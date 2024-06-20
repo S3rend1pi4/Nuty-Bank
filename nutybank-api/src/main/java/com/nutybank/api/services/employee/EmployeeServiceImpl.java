@@ -2,13 +2,18 @@ package com.nutybank.api.services.employee;
 
 import com.nutybank.api.dto.EmployeeDto;
 import com.nutybank.api.dto.RoleDto;
+import com.nutybank.api.entities.Client;
 import com.nutybank.api.repositories.EmployeeRepository;
 import com.nutybank.api.repositories.RoleRepository;
 import com.nutybank.api.entities.Employee;
 import com.nutybank.api.entities.Role;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +25,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public Page<Employee> findAll(Pageable pageable) {
@@ -42,29 +53,39 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee save(Employee employee) {
-        Optional<Role> roleOptional = roleRepository.findByName("ROLE_EMPLOYEE");
+    public Employee save(Employee employeePost) {
+        validatePassword(employeePost.getPassword());
+        Employee employee = new Employee();
+        employee.setName(employeePost.getName());
+        employee.setLastname(employeePost.getLastname());
+        employee.setOthername(employeePost.getOthername());
+        employee.setEmail(employeePost.getEmail());
+        employee.setDni(employeePost.getDni());
+        employee.setSalary(employeePost.getSalary());
+        employee.setPosition(employeePost.getPosition());
+        employee.setClient(employeePost.isClient());
+        employee.setManager(employeePost.isManager());
+        employee.setAdmin(employeePost.isAdmin());
+
+        // Inicializar conjunto de roles
         Set<Role> roles = new HashSet<>();
 
-        roleOptional.ifPresent(roles::add);
+        // Asignar roles basados en los valores booleanos
+        roleRepository.findByName("ROLE_EMPLOYEE").ifPresent(roles::add); // Agregar rol CLIENT por defecto
 
-        if(employee.isClient()) {
-            Optional<Role> optionalRoleEmployee = roleRepository.findByName("ROLE_CLIENT");
-            optionalRoleEmployee.ifPresent(roles::add);
+        if (employee.isClient()) {
+            roleRepository.findByName("ROLE_CLIENT").ifPresent(roles::add);
+        }
+        if (employee.isManager()) {
+            roleRepository.findByName("ROLE_MANAGER").ifPresent(roles::add);
+        }
+        if (employee.isAdmin()) {
+            roleRepository.findByName("ROLE_ADMIN").ifPresent(roles::add);
         }
 
-        if(employee.isManager()) {
-            Optional<Role> optionalRoleManager = roleRepository.findByName("ROLE_MANAGER");
-            optionalRoleManager.ifPresent(roles::add);
-        }
-
-        if(employee.isAdmin()) {
-            Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
-            optionalRoleAdmin.ifPresent(roles::add);
-        }
-
+        // Asignar roles al cliente
         employee.setRoles(roles);
-
+        employee.setPassword(passwordEncoder.encode(employeePost.getPassword()));
         return employeeRepository.save(employee);
     }
 
@@ -77,7 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeDb.setLastname(employeeDto.getLastname());
             employeeDb.setOthername(employeeDto.getOthername());
             employeeDb.setEmail(employeeDto.getEmail());
-            employeeDb.setPassword(employeeDto.getPassword());
+            employeeDb.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
             employeeDb.setDni(employeeDto.getDni());
             employeeDb.setPosition(employeeDto.getPosition());
             employeeDb.setSalary(employeeDto.getSalary());
@@ -104,5 +125,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean existsByDni(String dni) {
         return employeeRepository.existsByDni(dni);
+    }
+
+    private void validatePassword(String password) {
+        Set<ConstraintViolation<Client>> violations = validator.validateValue(Client.class, "password", password);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 }
