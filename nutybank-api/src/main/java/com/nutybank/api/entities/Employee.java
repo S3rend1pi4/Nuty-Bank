@@ -12,7 +12,7 @@ public class Employee extends Person {
     // Cargo que ocupa
     @NotBlank
     private String position;
-    @NotBlank
+    @NotNull
     private double salary;
     @NotNull
     private boolean admin;
