@@ -71,7 +71,7 @@ public class JwtAuthenticatorFilter extends UsernamePasswordAuthenticationFilter
                                             Authentication authResult) throws IOException, ServletException {
         User user = (User)authResult.getPrincipal();
         String username = user.getUsername();
-        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
+        Collection<? extends GrantedAuthority> roles = user.getAuthorities();
 
         Claims claims = Jwts.claims()
                 .add("authorities", new ObjectMapper().writeValueAsString(roles))
