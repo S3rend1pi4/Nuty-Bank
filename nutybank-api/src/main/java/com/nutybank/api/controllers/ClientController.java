@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,15 @@ public class ClientController {
     @GetMapping
     public List<Client> listAll() {
         return clientService.findAll();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getAuthenticatedClient(@AuthenticationPrincipal User user) {
+        Optional<Client> clientOptional = clientService.findByUserName(user.getUsername());
+        if(clientOptional.isPresent()) {
+            return ResponseEntity.ok(clientOptional.orElseThrow());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/client/id/{id}")
