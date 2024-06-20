@@ -1,6 +1,8 @@
 package com.nutybank.api.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 import java.util.Objects;
@@ -12,7 +14,9 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String concept;
+    @NotNull
     private double quantity;
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -20,9 +24,11 @@ public class Transaction {
     @ManyToOne()
     @JoinColumn(name = "origin_account_id")
     private Account originAccount;
+
     @ManyToOne
     @JoinColumn(name = "destination_account_id")
     private Account destinationAccount;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client clientTransaction;
