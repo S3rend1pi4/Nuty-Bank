@@ -6,6 +6,7 @@ Proyect in development
 
 - java 17
 - MySQL 8
+- SpringBoot 3
 
 ### Setup Proyect
 
