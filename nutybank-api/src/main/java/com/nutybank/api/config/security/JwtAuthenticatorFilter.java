@@ -42,30 +42,25 @@ public class JwtAuthenticatorFilter extends UsernamePasswordAuthenticationFilter
         String password = null;
 
         try {
-            // Read the request body as either a Client or Employee
             Client client = objectMapper.readValue(request.getReader(), Client.class);
-            if (client != null) {
-                username = client.getName();
-                password = client.getPassword();
-                System.out.println("Client credentials obtained successfully: " + username);
-            } else {
-                Employee employee = objectMapper.readValue(request.getReader(), Employee.class);
-                if (employee != null) {
-                    username = employee.getName();
-                    password = employee.getPassword();
-                    System.out.println("Employee credentials obtained successfully: " + username);
-                }
-            }
+            username = client.getName();
+            password = client.getPassword();
+            System.out.println("Client credentials obtained successfully: " + username);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read request body as either a Client or Employee", e);
+            try {
+                Employee employee = objectMapper.readValue(request.getReader(), Employee.class);
+                username = employee.getName();
+                password = employee.getPassword();
+                System.out.println("Employee credentials obtained successfully: " + username);
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to read request body as either a Client or Employee", ex);
+            }
         }
 
-        // Check if valid user credentials were obtained
         if (username == null || password == null) {
             throw new RuntimeException("Failed to obtain valid user credentials from the request");
         }
 
-        // Perform authentication
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -79,7 +74,7 @@ public class JwtAuthenticatorFilter extends UsernamePasswordAuthenticationFilter
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
 
         Claims claims = Jwts.claims()
-                .add("authorities", roles)
+                .add("authorities", new ObjectMapper().writeValueAsString(roles))
                 .add("username", username)
                 .build();
 
